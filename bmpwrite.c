@@ -26,7 +26,7 @@ static short	bmp_write_header(t_mlx_img *this, int fd)
 
 	header = (t_bmpheader){};
 	header.filetype[0] = 'B';
-	header.filetype[0] = 'M';
+	header.filetype[1] = 'M';
 	header.pixeldataoffset = sizeof(t_bmpheader) + sizeof(t_bmpinfo);
 	header.filesize = header.pixeldataoffset;
 	header.filesize += this->width * this->height * 32;
