@@ -91,7 +91,8 @@ extern short	bmp_write(t_mlx_img *this, const char *path)
 {
 	int	fd;
 
-	if (0 >	(fd = open(path, O_CREAT | O_WRONLY | O_TRUNC)))
+	if (0 >	(fd = open(path, O_CREAT | O_WRONLY | O_TRUNC,
+		S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)))
 		return (0);
 	if (!bmp_write_header(this, fd)
 		|| !bmp_write_info(this, fd)
