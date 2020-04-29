@@ -78,7 +78,7 @@ static short	bmp_write_pixel(t_mlx_img *src, int fd)
 	{
 		x = -1;
 		while (++x < src->width)
-			if (0 > write(fd, mlx_img_getptr(src, x, src->height - 1 - y), 24))
+			if (0 > write(fd, mlx_img_getptr(src, x, src->height - 1 - y), 3))
 				return (0);
 		size = (src->width * 24) % 32;
 		if (size && 0 > write(fd, "\0\0\0\0", size))
