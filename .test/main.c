@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <errno.h>
 
@@ -19,25 +20,28 @@
 
 #include "../bitmap.h"
 #include "../bmpread.c"
+#include "../bmpwrite.c"
 #include "../../get_next_line/get_next_line.c"
 
 void* g_mlx = NULL;
 
-int	main(int argc, char** args)
+static void TestWrite(const char* path, t_mlx_img* src)
 {
-	if (argc < 2)
-		return (-1);
+	if (!bmp_write(src, path))
+		printf("Error writting file. (%d)\n", errno);
+}
 
-	char* path = args[1];
+static void TestRead(const char* path, t_mlx_img* dst)
+{
 	int fd = open(path, O_RDONLY);
 	if (fd < 0)
 	{
 		printf("Error opening file: %d\n", errno);
-		return errno;
+		exit (errno);
 	}
 
-	t_bmpheader header = {0};
-	t_bmpinfo infos = {0};
+	t_bmpheader header = {};
+	t_bmpinfo infos = {};
 	if (!get_bmp_headers(fd, &header, &infos))
 		printf("Error reading headers\n");
 	printf("Type:\t%c%c \nSize: %u \nReserved: %02X%02X %02X%02X \nOffset: %X \n",
@@ -59,16 +63,28 @@ int	main(int argc, char** args)
 	if (!bmp_validate_headers(&header, &infos))
 	{
 		printf("\nInvalid header\n");
-		return (-1);
+		exit (-1);
 	}
 
+	mlx_img_init(dst, infos.imagewidth, infos.imageheight);
+	if (!get_bmp_texels(fd, dst, &infos))
+		printf("\nError reading pixels\n");
+}
+
+int	main(int argc, char** args)
+{
 	t_mlx_img img;
 	void*	window;
 	g_mlx = mlx_init();
-	mlx_img_init(&img, infos.imagewidth, infos.imageheight);
-	if (!get_bmp_texels(fd, &img, &infos))
-		printf("\nError reading pixels\n");
-	window = mlx_new_window(g_mlx, infos.imagewidth, infos.imageheight, path);
+
+	if (argc < 2)
+		return (-1);
+	TestRead(args[1], &img);
+
+	if (argc >= 3)
+		TestWrite(args[2], &img);
+
+	window = mlx_new_window(g_mlx, img.width, img.height, args[1]);
 	mlx_put_image_to_window(g_mlx, window, img.ptr, 0, 0);
 	mlx_loop(g_mlx);
 }

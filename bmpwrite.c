@@ -14,11 +14,17 @@
 
 #include "bmp_internals.h"
 
+/*
+** @return bool
+** 	true  OK
+** 	false error
+*/
+
 static short	bmp_write_header(t_mlx_img *this, int fd)
 {
 	t_bmpheader	header;
 
-	header = (t_bmpheader){ 0 };
+	header = (t_bmpheader){};
 	header.filetype[0] = 'B';
 	header.filetype[0] = 'M';
 	header.pixeldataoffset = sizeof(t_bmpheader) + sizeof(t_bmpinfo);
@@ -29,6 +35,12 @@ static short	bmp_write_header(t_mlx_img *this, int fd)
 	else
 		return (1);
 }
+
+/*
+** @return bool
+** 	true  OK
+** 	false error
+*/
 
 static short	bmp_write_info(t_mlx_img *this, int fd)
 {
@@ -48,6 +60,12 @@ static short	bmp_write_info(t_mlx_img *this, int fd)
 	else
 		return (1);
 }
+
+/*
+** @return bool
+** 	true  OK
+** 	false error
+*/
 
 static short	bmp_write_pixel(t_mlx_img *src, int fd)
 {
@@ -73,7 +91,7 @@ extern short	bmp_write(t_mlx_img *this, const char *path)
 {
 	int	fd;
 
-	if (0 >	fd  = open(path, O_CREAT | O_WRONLY | O_TRUNC))
+	if (0 >	(fd = open(path, O_CREAT | O_WRONLY | O_TRUNC)))
 		return (0);
 	if (!bmp_write_header(this, fd)
 		|| !bmp_write_info(this, fd)
