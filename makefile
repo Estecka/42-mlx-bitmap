@@ -1,4 +1,4 @@
-SRCS = bmpread.c \
+SRCS = bmpread.c bmpwrite.c \
 
 OBJS = ${SRCS:.c=.o}
 
