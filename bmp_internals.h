@@ -25,7 +25,6 @@ struct	s_bmpfileheader
 	unsigned int	pixeldataoffset;
 } __attribute__((packed));
 
-
 typedef struct s_bmpinfodata	t_bmpinfo;
 struct	s_bmpinfodata
 {

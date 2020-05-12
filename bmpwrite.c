@@ -25,7 +25,7 @@ static short	bmp_write_header(t_mlx_img *this, int fd)
 {
 	t_bmpheader	header;
 
-	header = (t_bmpheader){};
+	header = (t_bmpheader){ {0, 0}, 0, {0, 0}, 0 };
 	header.filetype[0] = 'B';
 	header.filetype[1] = 'M';
 	header.pixeldataoffset = sizeof(t_bmpheader) + sizeof(t_bmpinfo);
@@ -92,7 +92,7 @@ extern short	bmp_write(t_mlx_img *this, const char *path)
 {
 	int	fd;
 
-	if (0 >	(fd = open(path, O_CREAT | O_WRONLY | O_TRUNC,
+	if (0 > (fd = open(path, O_CREAT | O_WRONLY | O_TRUNC,
 		S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)))
 		return (0);
 	if (!bmp_write_header(this, fd)
