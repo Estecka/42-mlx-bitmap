@@ -25,7 +25,7 @@ ${NAME}: ${OBJS}
 	ar rcs ${NAME} ${OBJS}
 
 test: ${TEST}
-${TEST}:
+${TEST}: ${NAME} .test/main.c
 	make -C ../minilibx
 ifeq (${OS}, Darwin)
 	cp ../minilibx/libmlx.dylib ./
